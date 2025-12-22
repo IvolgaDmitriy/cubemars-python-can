@@ -11,9 +11,9 @@ from bitstring import BitArray
 # 8 bytes of data is sent to the motor
 can_frame_fmt_send = "=IB3x8s"
 # 6 bytes are received from the motor
-can_frame_fmt_recv = "=IB3x6s"
-# Total CAN Frame size is 14 Bytes: 8 Bytes overhead + 6 Bytes data
-recvBytes = 14
+can_frame_fmt_recv = "=IB3x8s"
+# Total CAN Frame size is 14 Bytes: 8 Bytes overhead + 8 Bytes data
+recvBytes = 16
 
 # List of Motors Supported by this Driver
 legitimate_motors = [
@@ -24,9 +24,55 @@ legitimate_motors = [
                     "AK80_9_V2",
                     "AK70_10_V1p1",
                     "AK10_9_V1p1"
+                    "AK45_36_V1",
+                    "AK45_10_V1",
+                    "AK40_10_V1"
                     ]
 
 # Constants for conversion
+AK45_36_PARAMS = {
+                "P_MIN" : -12.5,
+                "P_MAX" : 12.5,
+                "V_MIN" : -6.0,
+                "V_MAX" : 6.0,
+                "KP_MIN" : 0.0,
+                "KP_MAX" : 500,
+                "KD_MIN" : 0.0,
+                "KD_MAX" : 5.0,
+                "T_MIN" : -34.0,
+                "T_MAX" : 34.0,
+                "AXIS_DIRECTION" : -1
+                }
+
+
+AK45_10_PARAMS = {
+                "P_MIN" : -12.5,
+                "P_MAX" : 12.5,
+                "V_MIN" : -20.0,
+                "V_MAX" : 20.0,
+                "KP_MIN" : 0.0,
+                "KP_MAX" : 500,
+                "KD_MIN" : 0.0,
+                "KD_MAX" : 5.0,
+                "T_MIN" : -8.0,
+                "T_MAX" : 8.0,
+                "AXIS_DIRECTION" : -1
+                }
+
+AK40_10_PARAMS = {
+                "P_MIN" : -12.5,
+                "P_MAX" : 12.5,
+                "V_MIN" : -45.0,
+                "V_MAX" : 45.0,
+                "KP_MIN" : 0.0,
+                "KP_MAX" : 500,
+                "KD_MIN" : 0.0,
+                "KD_MAX" : 5.0,
+                "T_MIN" : -5.0,
+                "T_MAX" : 5.0,
+                "AXIS_DIRECTION" : -1
+                }
+
 # Working parameters for AK80-6 V1.0 firmware
 AK80_6_V1_PARAMS = {
                 "P_MIN" : -95.5,
@@ -209,6 +255,12 @@ class CanMotorController:
             can_frame_fmt_recv = "=IB3x8s"
         elif motor_type == "AK70_10_V1p1":
             self.motorParams = AK70_10_V1p1_params
+        elif motor_type == "AK45_36_V1":
+            self.motorParams = AK45_36_PARAMS
+        elif motor_type == "AK45_10_V1":
+            self.motorParams = AK45_10_PARAMS
+        elif motor_type == "AK40_10_V1":
+            self.motorParams = AK40_10_PARAMS
 
         can_socket = (can_socket,)
         self.motor_id = motor_id
