@@ -38,21 +38,22 @@ pos, vel, curr = joint_controller.enable_motor()
 joint_obs = MotorState(pos, vel, curr)
 print(f"Actual motor state: {joint_obs}")
 
-input("Press 'Enter' to continue...")
 joint_obs.state = joint_controller.set_zero_position()
 print(f"Actual motor state: {joint_obs}")
 
 sim_time = 10
-dt = 1/250
+dt = 1/25
 sim_time_line = np.arange(0, sim_time, dt)
 sin_wave = np.pi/4 * np.sin(2 * np.pi * sim_time_line)
 
 data_line = []
 
-for i in sim_time_line:
+for i, time_stamp in enumerate(sim_time_line):
     joint_obs.state = joint_controller.send_rad_command(0, 0, 0, 0, 0)
     # OR
-    # joint_obs.state = joint_controller.send_rad_command(sin_wave[i], 10, 0, 0, 0)
+    # joint_obs.state = joint_controller.send_rad_command(sin_wave[i], 0, 1, 0, 0)
+
+    print(f"Time: {round(time_stamp, 3)}s, {joint_obs}")
 
     data_line.append(joint_obs.pos)
 
@@ -62,4 +63,5 @@ joint_controller.disable_motor()
 
 plt.subplot()
 plt.plot(sim_time_line, data_line)
+plt.plot(sim_time_line, sin_wave)
 plt.show()
